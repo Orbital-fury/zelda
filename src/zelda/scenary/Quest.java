@@ -3,6 +3,7 @@ package zelda.scenary;
 import java.awt.Graphics2D;
 
 import zelda.Zelda;
+import zelda.enemies.Enemy;
 
 import com.golden.gamedev.object.PlayField;
 
@@ -218,6 +219,9 @@ public class Quest extends PlayField {
         b00.add(new Rock(this.game, Rock.Kind.GREEN_PLAIN));
         
         this.add(b00);
+        
+        b00.setEnemyOnBoard("01", 300, 400);
+        b00.setEnemyOnBoard("01", 200, 250);
         
     }
     

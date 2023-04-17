@@ -4,7 +4,9 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import zelda.Link;
 import zelda.Zelda;
+import zelda.enemies.Enemy;
 
 import com.golden.gamedev.object.Sprite;
 import com.golden.gamedev.object.SpriteGroup;
@@ -26,6 +28,8 @@ public class Board {
     private int size;
     
     private boolean display;
+    
+    private ArrayList<Enemy> enemies = new ArrayList<Enemy>();
     
     public Board(Zelda game, int x, int y) {
         this.game = game;
@@ -128,5 +132,14 @@ public class Board {
                 }
             }
         }
+        for (Enemy enemy : enemies) {
+        	enemy.render(g);
+        }
+    }
+    
+    public void setEnemyOnBoard(String typeEnnemi, int x, int y) {
+    	Enemy enemy01 = new Enemy(game, typeEnnemi, x, y);
+    	enemies.add(enemy01);
+    	enemy01.setBoard(this);
     }
 }

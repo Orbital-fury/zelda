@@ -28,7 +28,7 @@ public class Zelda extends Game {
     public void initResources() {
         this.quest = new Quest(this);
         this.link = new Link(this);
-        this.link.setBoard(this.quest.getCurrentBoard());    
+        this.link.setBoard(this.quest.getCurrentBoard());
         this.menu = false;
     }
         
