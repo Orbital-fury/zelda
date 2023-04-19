@@ -22,9 +22,9 @@ public class Zelda extends Game {
     
     private boolean menu;
     
-    private static final int WIDTH = 672;
-    private static final int HEIGHT = 588;
-    private static final int HEIGHT_MENU = 126;
+    public static final int WIDTH = 672;
+    public static final int HEIGHT = 588;
+    public static final int HEIGHT_MENU = 126;
     
     public Zelda() {
         

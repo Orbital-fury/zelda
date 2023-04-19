@@ -436,8 +436,8 @@ public class Quest extends PlayField {
         
         //////////
         
-        b00.setEnemyOnBoard("01", 300, 400);
-        b00.setEnemyOnBoard("01", 200, 250);
+        b00.setEnemyOnBoard("01", 160, 450);
+        b00.setEnemyOnBoard("20", 160, 300);
         
     }
     

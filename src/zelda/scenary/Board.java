@@ -7,6 +7,8 @@ import java.util.List;
 import zelda.Link;
 import zelda.Zelda;
 import zelda.enemies.Enemy;
+import zelda.enemies.Enemy4D;
+import zelda.enemies.EnemyGD;
 import zelda.objects.Ruby;
 import zelda.objects.Ruby.Kind;
 
@@ -89,7 +91,7 @@ public class Board {
    }
     
     public SpriteGroup getForeground() {
-        SpriteGroup foreground = new SpriteGroup("");
+        SpriteGroup foreground = new SpriteGroup("FOREGROUND");
         for (int i = 0; i < Board.WIDTH; i++) {
             for (int j = 0; j < Board.HEIGHT; j++) {
                 if (tiles[i][j] != null) {
@@ -105,7 +107,7 @@ public class Board {
     }
     
     public SpriteGroup getBackground() {
-        SpriteGroup background = new SpriteGroup("");
+        SpriteGroup background = new SpriteGroup("BACKGROUND");
         for (int i = 0; i < Board.WIDTH; i++) {
             for (int j = 0; j < Board.HEIGHT; j++) {
                 if (tiles[i][j] != null) {
@@ -130,6 +132,9 @@ public class Board {
         }
         for (Ruby ruby : rubies) {
         	ruby.update();
+        }
+        for (Enemy enemy : enemies) {
+        	enemy.update(elapsedTime);
         }
     }
     
@@ -157,8 +162,17 @@ public class Board {
     }
     
     public void setEnemyOnBoard(String typeEnnemi, int x, int y) {
-    	Enemy enemy01 = new Enemy(game, typeEnnemi, x, y);
-    	enemies.add(enemy01);
-    	enemy01.setBoard(this);
+    	if (Integer.parseInt(typeEnnemi) < 20){
+    		System.out.println(Integer.parseInt(typeEnnemi));
+    		
+    		Enemy4D enemy01 = new Enemy4D(game, typeEnnemi, x, y);
+        	enemies.add(enemy01);
+        	enemy01.setBoard(this);
+    	}
+    	else {
+    		EnemyGD enemy02 = new EnemyGD(game, typeEnnemi, x, y);
+        	enemies.add(enemy02);
+        	enemy02.setBoard(this);
+    	}
     }
 }
