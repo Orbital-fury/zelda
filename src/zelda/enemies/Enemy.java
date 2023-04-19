@@ -53,7 +53,7 @@ public class Enemy extends AnimatedSprite {
     }
     
     private void initResources(int x, int y) {
-        BufferedImage[] sprites = new BufferedImage[35];
+        BufferedImage[] sprites = new BufferedImage[8];
         // Walk north
         sprites[0] = game.getImage("res/sprites/Ennemies/E"+this.numero+"WN1.gif");
         sprites[1] = game.getImage("res/sprites/Ennemies/E"+numero+"WN1.gif");
@@ -200,9 +200,6 @@ public class Enemy extends AnimatedSprite {
         }
         
         public void collided(Sprite s1, Sprite s2) {
-            
-     
-        
             this.revertPosition1();
         }
     }

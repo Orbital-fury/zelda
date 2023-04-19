@@ -7,6 +7,8 @@ import java.util.List;
 import zelda.Link;
 import zelda.Zelda;
 import zelda.enemies.Enemy;
+import zelda.objects.Ruby;
+import zelda.objects.Ruby.Kind;
 
 import com.golden.gamedev.object.Sprite;
 import com.golden.gamedev.object.SpriteGroup;
@@ -20,6 +22,8 @@ public class Board {
     private int x;
     
     private int y;
+    
+    private ArrayList<Ruby> rubies = new ArrayList<Ruby>();
     
     private AbstractTile[][] tiles;
     
@@ -47,6 +51,8 @@ public class Board {
     public int getY() {
         return this.y;
     }
+    
+    
     
     
     public boolean moveTo(long elapsedTime, double x, double y, double speed) {
@@ -103,7 +109,7 @@ public class Board {
         for (int i = 0; i < Board.WIDTH; i++) {
             for (int j = 0; j < Board.HEIGHT; j++) {
                 if (tiles[i][j] != null) {
-                    SpriteGroup sg = tiles[i][j].getForeground(); 
+                    SpriteGroup sg = tiles[i][j].getBackground();
                     Sprite sprites[] = sg.getSprites();
                     for (int k = 0; k < sg.getSize(); k++) {
                         background.add(sprites[k]);
@@ -122,6 +128,16 @@ public class Board {
                 }
             }
         }
+        for (Ruby ruby : rubies) {
+        	ruby.update();
+        }
+    }
+    
+    public void createRuby() {
+    	Ruby ruby = new Ruby(Kind.BLUE, game);
+    	ruby.setRuby();
+    	rubies.add(ruby);
+        ruby.setLocation(game.getLink().getX() + 50, game.getLink().getY());
     }
 
     public void render(Graphics2D g) {
@@ -134,6 +150,9 @@ public class Board {
         }
         for (Enemy enemy : enemies) {
         	enemy.render(g);
+        }
+        for (Ruby ruby : rubies) {
+        	ruby.render(g);
         }
     }
     

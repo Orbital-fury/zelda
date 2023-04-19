@@ -13,6 +13,8 @@ public class QuestMenu {
     
     private Zelda game;
     
+    private int nbrRuby;
+    
     public QuestMenu(Zelda game) {
         this.game = game;
         this.sprites = new SpriteGroup("");
@@ -25,6 +27,7 @@ public class QuestMenu {
         this.sprites.add(new Sprite(this.game.getImage("res/sprites/X.GIF"), 250, 60));
         this.sprites.add(new Sprite(this.game.getImage("res/sprites/PIECE.GIF"), 230, 30));
         this.sprites.add(new Sprite(this.game.getImage("res/sprites/X.GIF"), 250, 30));
+        int nbrRuby = 0;
     }
     
     public void move(long elapsedTime, boolean flag) {
@@ -36,6 +39,26 @@ public class QuestMenu {
                 s[i].moveTo(elapsedTime, s[i].getX(), s[i].getY() - 300, 1);
         }
         
+    }
+    
+    public int getNbrRuby() {
+    	return this.nbrRuby;
+    }
+    
+    public String afficheNum(int n) {
+    	return "res/sprites/" + n + ".GIF";
+    }
+    
+    public void rubyDisplay() {
+    	Sprite ruby = this.sprites.getSprites()[8];
+    	double x = ruby.getX();
+    	double y = ruby.getY();
+    	ruby.setImage(this.game.getImage(afficheNum(this.nbrRuby)));
+    }
+    
+    public void gainRuby(int incr) {
+    	this.nbrRuby += incr;
+    	this.rubyDisplay();
     }
     
     public void update(long elapsedTime) {

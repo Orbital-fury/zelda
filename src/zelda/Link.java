@@ -2,6 +2,7 @@
 package zelda;
 
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 import zelda.objects.Blade;
@@ -15,6 +16,7 @@ import com.golden.gamedev.object.Sprite;
 import com.golden.gamedev.object.SpriteGroup;
 import com.golden.gamedev.object.Timer;
 import com.golden.gamedev.object.collision.AdvanceCollisionGroup;
+import com.golden.gamedev.object.collision.BasicCollisionGroup;
 
 public class Link extends AnimatedSprite {
     
@@ -40,7 +42,11 @@ public class Link extends AnimatedSprite {
     
     private Timer figth;
     
+    private static SpriteGroup linkSG = new SpriteGroup("LINK SPRITE GROUPE");
+    
     private CollisionManager manager;
+    
+    //private CollisionManager rubyManager;
     
     public Link(Game game) {
         this.game = game;
@@ -50,6 +56,7 @@ public class Link extends AnimatedSprite {
         this.figth = new Timer(Link.FIGHT_TIMER);
         this.figth.setActive(false);
         this.manager = new LinkCollisionManager();
+        //this.rubyManager = new RubyCollisionManager();
         this.initResources();
     }
     
@@ -111,9 +118,13 @@ public class Link extends AnimatedSprite {
     }
     
     public void setBoard(Board board) {
-        SpriteGroup link = new SpriteGroup("LINK SPRITE GROUPE");
+        SpriteGroup link = linkSG;
         link.add(this);
         this.manager.setCollisionGroup(link, board.getForeground());
+    }
+    
+    public SpriteGroup getSpriteGroup() {
+    	return linkSG;
     }
     
     public void update(long elapsedTime) {
@@ -275,6 +286,19 @@ public class Link extends AnimatedSprite {
             this.revertPosition1();
         }
     }
-     
+    
+    /*
+    private class RubyCollisionManager extends BasicCollisionGroup {
+        public RubyCollisionManager() {
+            this.pixelPerfectCollision = false;
+        }
+        
+        public void collided(Sprite s1, Sprite s2) {
+        	//game.getQuest().getMenu().gainRuby(1);
+        	System.out.println("coucou");
+        	//s1.setActive(false);
+        }
+    }
+     */
 }
     
