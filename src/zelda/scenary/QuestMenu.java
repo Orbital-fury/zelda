@@ -14,6 +14,7 @@ public class QuestMenu {
     private SpriteGroup sprites;
     private SpriteGroup rubiesGroup;
     private SpriteGroup coeur;
+    private SpriteGroup bow;
     
     private Zelda game;
     
@@ -47,6 +48,8 @@ public class QuestMenu {
         this.coeur.add(new Sprite(this.game.getImage("res/sprites/Objects/OHC.GIF"), 525, 60));
         this.coeur.add(new Sprite(this.game.getImage("res/sprites/Objects/OHC.GIF"), 550, 60));
         this.nbrCoeur = 6;
+        
+        this.bow = new SpriteGroup("bow");
     }
     
     public void move(long elapsedTime, boolean flag) {
@@ -121,7 +124,9 @@ public class QuestMenu {
 		
 	}
     
-    
+	  public void createBow() {
+		  this.bow.add(new Sprite(this.game.getImage("res/sprites/Objects/OBOW.gif"), 344, 53));
+	    }
     
     public void gainRuby(int incr) {
     	this.nbrRuby = Math.min(this.nbrRuby + incr, 999);
@@ -139,5 +144,6 @@ public class QuestMenu {
         this.sprites.render(g);
         this.rubiesGroup.render(g);
         this.coeur.render(g);
+        this.bow.render(g);
     }
 }

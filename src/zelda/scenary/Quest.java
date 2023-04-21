@@ -78,38 +78,6 @@ public class Quest extends PlayField {
     }
     
 	private void createBoard() {
-	    /*
-		// Charge l'image d'arrière-plan pour le donjon
-		Image fond = ImageIO.read(new File("res/sprites/Dongeon/1/DG1BG.gif"));
-
-		Board b00 = new Board(this.game, 0, 0);
-
-		DungeonBoard d00 = new DungeonBoard(this.game, 0, 0, fond);
-
-		Path dir = Paths.get("res/boards/");
-
-		try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
-			for (Path file : stream) {
-				if (Files.isRegularFile(file)) {
-					char z = file.getFileName().toString().charAt(0);
-					switch (z) {
-					case 'D':
-						processDungeonFile(d00, file);
-						break;
-					case 'B':
-						processDungeonFile(b00, file);
-						break;
-					}
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		this.add(d00);
-		*/
-		
-		
 		
 		Path dir = Paths.get("C:\\Users\\Simon\\Documents\\zelda\\res\\boards");
 	
@@ -198,21 +166,8 @@ public class Quest extends PlayField {
         b.createRuby(450, 400);
         b.createCoeur(400,400);
         
-        
         Board d = boards[4][1];
         d.createBow(306,198);
-        
-        /*
-        for (int i = 0; i < boardSG.length ; i++ ) {
-        	for (int j = 0; j < boardSG[0].length; j++) {
-        		System.out.println(boards[i][j]);
-        		boardSG[i][j] = b.getForeground();
-            	this.addGroup(boardSG[i][j]);
-            	this.addCollisionGroup(enemySG, this.boardSG[i][j], new EnemyGDCollisionManager());
-            	this.addCollisionGroup(enemy4D, this.boardSG[i][j], new Enemy4DCollisionManager());
-        	}
-        }
-        */
         
         boardSG[2][0] = b.getForeground();
     	this.addGroup(boardSG[2][0]);
@@ -224,7 +179,7 @@ public class Quest extends PlayField {
     	//this.addCollisionGroup(linkSG, enemy4D, new LinkCollisionManager());
     	this.addCollisionGroup(enemySG, linkSG, new EnemyLinkCollisionManager());
     	this.addCollisionGroup(enemy4D, linkSG, new EnemyLinkCollisionManager());
-        
+    	
     	playSound(Sound.MUSIC);
     }
     
@@ -407,6 +362,7 @@ public class Quest extends PlayField {
 	        		
 	                
 	        		s1.moveX(1000);
+	        		menu.createBow();  //appel a creation dans queste menu
 	        		s1.setActive(false);
         		}
         	}

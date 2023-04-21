@@ -121,10 +121,16 @@ public class Enemy4D extends Enemy {
 
 		}
 
-		if (this.getLife() < 1) {
-	    	   this.moveX(1000);
-	    	   this.setActive(false);
-	       }
+		if (this.getLife() < 1 && life > -1) {
+			Board b = game.getQuest().getCurrentBoard();
+			int x = (int) this.getX();
+			int y = (int) this.getY();
+			b.createRuby(x, y);
+			System.out.println(life);
+			life = -2;
+			this.moveX(1000);
+			this.setActive(false);
+	    }
 	}
 	
 

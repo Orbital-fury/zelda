@@ -18,14 +18,13 @@ public class Bow extends ObjectZ {
 		this.game = game;
 		this.initResources();
 		this.setActive(true);
-		//this.manager = new RubyCollisionManager();		
+				
     }
 	
 	public void setBow() {
 		SpriteGroup bowSG = game.getQuest().getBowSG();
         bowSG.add(this);
-        //SpriteGroup link = game.getQuest().getLinkSG();
-        //this.manager.setCollisionGroup(rubySG, link);
+       
     }
 	
 	private void initResources() {
@@ -40,24 +39,5 @@ public class Bow extends ObjectZ {
         super.render(g);
     }
 	
-	/*
-	protected class RubyCollisionManager extends BasicCollisionGroup {
-		
-		public boolean colliding = false;
-		
-		public RubyCollisionManager() {
-            this.pixelPerfectCollision = false;
-        }
-        
-        public void collided(Sprite s1, Sprite s2) {
-        	if (!colliding) {
-        		game.getQuest().getMenu().gainRuby(1);
-        		System.out.println(game.getQuest().getMenu().getNbrRuby());
-        		colliding = true;
-        	}
-        	s1.setActive(false);
-        }
-    }
-    */
 
 }
