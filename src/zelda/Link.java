@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
+import zelda.enemies.Enemy;
 import zelda.objects.Blade;
 import zelda.objects.Shield;
 import zelda.scenary.Board;
@@ -20,17 +21,19 @@ import com.golden.gamedev.object.collision.BasicCollisionGroup;
 
 public class Link extends AnimatedSprite {
     
-    private static final double SPEED = 0.2;  
+    private static final double SPEED = 0.1;  
     
-    private static final int ANIMATION_DELAY = 100;  
+    private static final int ANIMATION_DELAY = 100;
     
     private static final int FIGHT_TIMER = 300;
+    
+    private static final int HIT_TIMER = 1000;
     
     public static final Shield.Kind DEFAULT_SHIELD = Shield.Kind.SMALL;
     
     public static final Orientation DEFAULT_ORIENTATION = Orientation.NORTH;
     
-    private Game game;
+    private Zelda game;
     
     private Blade.Kind blade;
     
@@ -41,24 +44,40 @@ public class Link extends AnimatedSprite {
     private int life;
     
     private Timer figth;
+    private Timer hit;
     
-    private static SpriteGroup linkSG = new SpriteGroup("LINK SPRITE GROUPE");
+    //private static SpriteGroup linkSG = new SpriteGroup("LINK SPRITE GROUPE");
     
-    private CollisionManager manager;
+    private CollisionManager murManager;
+    private CollisionManager EnemyManager;
+    private CollisionManager Enemy4DManager;
     
-    //private CollisionManager rubyManager;
-    
-    public Link(Game game) {
+    public Link(Zelda game) {
         this.game = game;
         this.shield = Link.DEFAULT_SHIELD;
         this.orientation = Link.DEFAULT_ORIENTATION;
         this.getAnimationTimer().setDelay(Link.ANIMATION_DELAY);
         this.figth = new Timer(Link.FIGHT_TIMER);
-        this.figth.setActive(false);
-        this.manager = new LinkCollisionManager();
+		this.hit = new Timer(Link.HIT_TIMER);
+		this.figth.setActive(false);
+		this.hit.setActive(false);
+        this.murManager = new LinkCollisionManager();
+        this.EnemyManager = new EnemyCollisionManager();
+        this.Enemy4DManager = new EnemyCollisionManager();
+        life = game.getQuest().getMenu().getNbrCoeur();;
         //this.rubyManager = new RubyCollisionManager();
         this.initResources();
     }
+    
+	public Timer getFight() {
+		return this.figth;
+	}
+	public Timer getHit() {
+		return this.hit;
+	}
+	public Orientation getOrientation() {
+		return this.orientation;
+	}
     
     private void initResources() {
         BufferedImage[] sprites = new BufferedImage[35];
@@ -118,34 +137,58 @@ public class Link extends AnimatedSprite {
     }
     
     public void setBoard(Board board) {
-        SpriteGroup link = linkSG;
-        link.add(this);
-        this.manager.setCollisionGroup(link, board.getForeground());
+    	SpriteGroup linkSG = game.getQuest().getGroup("LINK SPRITE GROUPE");
+        linkSG.add(this);
+        this.murManager.setCollisionGroup(linkSG, board.getForeground());
+        
+        SpriteGroup enemySGroup =game.getQuest().getEnemySG();
+        this.EnemyManager.setCollisionGroup(linkSG, enemySGroup);
+        
+        SpriteGroup enemy4Droup =game.getQuest().getEnemy4D();
+	    this.Enemy4DManager.setCollisionGroup(linkSG, enemy4Droup);
+        //this.linkOnBoard(board);
+    }
+    
+    public void linkOnBoard(Board board) {
+    	SpriteGroup linkSG = game.getQuest().getGroup("LINK SPRITE GROUPE");
+        this.murManager.setCollisionGroup(linkSG, board.getForeground());
     }
     
     public SpriteGroup getSpriteGroup() {
-    	return linkSG;
+    	return game.getQuest().getLinkSG();
     }
     
     public void update(long elapsedTime) {
-        super.update(elapsedTime);
-        if (this.figth.action(elapsedTime)) {
-            this.figth.setActive(false);
-            if (this.orientation.equals(Orientation.WEST)) {
-                this.setX(this.getX() + 22);
-                if (this.shield.equals(Shield.Kind.SMALL)) {
-                    this.setAnimationFrame(10, 10);
-                } else {
-                    this.setAnimationFrame(12, 12);
-                }
-            } else if (this.orientation.equals(Orientation.NORTH)) {
-                this.setY(this.getY() + 22);
-                this.setAnimationFrame(0, 0);
-            }
-        }
-        if (this.manager != null) 
-            this.manager.checkCollision();
-    }
+		super.update(elapsedTime);
+		if (this.figth.action(elapsedTime)) {
+			this.figth.setActive(false);
+			if (this.orientation.equals(Orientation.WEST)) {
+				this.setX(this.getX() + 22);
+				if (this.shield.equals(Shield.Kind.SMALL)) {
+					this.setAnimationFrame(10, 10);
+				} else {
+					this.setAnimationFrame(12, 12);
+				}
+			} else if (this.orientation.equals(Orientation.NORTH)) {
+				this.setY(this.getY() + 22);
+				this.setAnimationFrame(0, 0);
+			}
+		}
+		if (this.hit.action(elapsedTime)) {
+			this.hit.setActive(false);
+
+		}
+		
+		
+		if (this.murManager != null)
+			this.murManager.checkCollision();
+		if (this.EnemyManager != null)
+			this.EnemyManager.checkCollision();
+		if (this.Enemy4DManager != null)
+			this.Enemy4DManager.checkCollision();
+		
+
+	}
 
     
     public void render(Graphics2D g) {
@@ -275,17 +318,86 @@ public class Link extends AnimatedSprite {
     }
     
     private class LinkCollisionManager extends AdvanceCollisionGroup {
-        public LinkCollisionManager() {
-            this.pixelPerfectCollision = false;
-        }
-        
-        public void collided(Sprite s1, Sprite s2) {
-            
-     
-        
-            this.revertPosition1();
-        }
-    }
+		public LinkCollisionManager() {
+			this.pixelPerfectCollision = false;
+		}
+
+		public void collided(Sprite s1, Sprite s2) {
+			this.revertPosition1();
+		}
+	}
+
+	private class EnemyCollisionManager extends AdvanceCollisionGroup {
+		public EnemyCollisionManager() {
+			this.pixelPerfectCollision = false;
+		}
+
+		public void collided(Sprite s1, Sprite s2) {
+
+			Link link = (Link) s1;
+			Enemy enemy = (Enemy) s2;
+			
+			if (s2.isActive() && game.getQuest().getCurrentBoard().getEnemies().contains(s2)) {
+				if (!link.hit.isActive()) { // Combat non actif
+					if (!link.figth.isActive()) {
+						life = life - 1;
+						game.getQuest().getMenu().setNbrCoeur(life);
+						game.getQuest().getMenu().coeurDisplay();
+						this.revertPosition1();
+						link.hit.setActive(true);
+						//this.revertPosition1();
+					//}
+					
+					} else { // Combat actif
+						switch (link.orientation) {
+						case NORTH:
+							if (!(this.getCollisionSide() == 4)) {
+								life = life - 1;
+								game.getQuest().getMenu().setNbrCoeur(life);
+								game.getQuest().getMenu().coeurDisplay();
+								this.revertPosition1();
+								link.hit.setActive(true);
+							}
+							break;
+						case SOUTH:
+							if (!(this.getCollisionSide() == 8)) {
+								life = life - 1;
+								game.getQuest().getMenu().setNbrCoeur(life);
+								game.getQuest().getMenu().coeurDisplay();
+								this.revertPosition1();
+								link.hit.setActive(true);
+							}
+							break;
+						case WEST:
+							if (!(this.getCollisionSide() == 1)) {
+								life = life - 1;
+								game.getQuest().getMenu().setNbrCoeur(life);
+								game.getQuest().getMenu().coeurDisplay();
+								this.revertPosition1();
+								link.hit.setActive(true);
+							}
+							break;
+						case EAST:
+							if (!(this.getCollisionSide() == 2)) {
+								life = life - 1;
+								game.getQuest().getMenu().setNbrCoeur(life);
+								game.getQuest().getMenu().coeurDisplay();
+								this.revertPosition1();
+								link.hit.setActive(true);
+							}
+							break;
+						default:
+							// do nothing
+						}
+						// if (this.getCollisionSide())
+						this.revertPosition1();
+					}
+				} else {
+					this.revertPosition1();
+				}
+			}
+		}
+	}
     
     /*
     private class RubyCollisionManager extends BasicCollisionGroup {

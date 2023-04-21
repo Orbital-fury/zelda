@@ -9,6 +9,8 @@ import zelda.Zelda;
 import zelda.enemies.Enemy;
 import zelda.enemies.Enemy4D;
 import zelda.enemies.EnemyGD;
+import zelda.objects.Bow;
+import zelda.objects.ObjectZ;
 import zelda.objects.Ruby;
 import zelda.objects.Ruby.Kind;
 
@@ -27,11 +29,13 @@ public class Board {
     
     private ArrayList<Ruby> rubies = new ArrayList<Ruby>();
     
-    private AbstractTile[][] tiles;
+    private ArrayList<ObjectZ> objects = new ArrayList<ObjectZ>();
+    
+    protected AbstractTile[][] tiles;
     
     private Zelda game;
     
-    private int size;
+    protected int size;
     
     private boolean display;
     
@@ -54,7 +58,17 @@ public class Board {
         return this.y;
     }
     
+    public ArrayList<Ruby> getRubies() {
+    	return rubies;
+    }
     
+    public ArrayList<Enemy> getEnemies() {
+    	return enemies;
+    }
+    
+    public ArrayList<ObjectZ> getObjects() {
+    	return objects;
+    }
     
     
     public boolean moveTo(long elapsedTime, double x, double y, double speed) {
@@ -130,19 +144,24 @@ public class Board {
                 }
             }
         }
-        for (Ruby ruby : rubies) {
-        	ruby.update();
-        }
         for (Enemy enemy : enemies) {
         	enemy.update(elapsedTime);
         }
     }
     
-    public void createRuby() {
+    public void createRuby(int x, int y) {
     	Ruby ruby = new Ruby(Kind.BLUE, game);
-    	ruby.setRuby();
+    	System.out.println(ruby);
     	rubies.add(ruby);
-        ruby.setLocation(game.getLink().getX() + 50, game.getLink().getY());
+    	ruby.setRuby();
+        ruby.setLocation(x, y);
+    }
+    
+    public void createBow(int x, int y) {
+    	Bow bow = new Bow(game);
+    	objects.add(bow);
+    	bow.setBow();
+        bow.setLocation(x, y);
     }
 
     public void render(Graphics2D g) {
@@ -159,18 +178,20 @@ public class Board {
         for (Ruby ruby : rubies) {
         	ruby.render(g);
         }
+        for (ObjectZ object : objects) {
+        	object.render(g);
+        }
     }
     
-    public void setEnemyOnBoard(String typeEnnemi, int x, int y) {
+    public void setEnemyOnBoard(String typeEnnemi, int x, int y, int life) {
     	if (Integer.parseInt(typeEnnemi) < 20){
-    		System.out.println(Integer.parseInt(typeEnnemi));
     		
-    		Enemy4D enemy01 = new Enemy4D(game, typeEnnemi, x, y);
+    		Enemy4D enemy01 = new Enemy4D(game, typeEnnemi, x, y, life);
         	enemies.add(enemy01);
         	enemy01.setBoard(this);
     	}
     	else {
-    		EnemyGD enemy02 = new EnemyGD(game, typeEnnemi, x, y);
+    		EnemyGD enemy02 = new EnemyGD(game, typeEnnemi, x, y, life);
         	enemies.add(enemy02);
         	enemy02.setBoard(this);
     	}

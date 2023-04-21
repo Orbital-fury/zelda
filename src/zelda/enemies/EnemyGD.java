@@ -4,6 +4,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import zelda.scenary.Board;
 import zelda.*;
+
+
 import com.golden.gamedev.Game;
 import com.golden.gamedev.object.AnimatedSprite;
 import com.golden.gamedev.object.CollisionManager;
@@ -28,24 +30,30 @@ public class EnemyGD  extends Enemy{
     
     private Orientation orientation;
     
-    private int life;
+   
     
     private Timer figth;
     
-    private CollisionManager manager;
+    //private static CollisionManager murmanager;
+    //private static CollisionManager linkManager;
     
     private String numero;
 
     
-    public EnemyGD(Zelda game,String numero, int x, int y) {
+    public EnemyGD(Zelda game,String numero, int x, int y, int life) {
+    	super(life);
         this.game = game;
         this.orientation = (Orientation) EnemyGD.DEFAULT_ORIENTATION;
         this.getAnimationTimer().setDelay(EnemyGD.ANIMATION_DELAY);
         this.figth = new Timer(EnemyGD.FIGHT_TIMER);
         this.figth.setActive(false);
-        this.manager = new EnemyGDCollisionManager();
+        //this.murmanager = new EnemyGDCollisionManager();
+        //this.linkManager = new EnemyGDCollisionManager();
         this.numero = numero;
         this.initResources(x, y);
+       
+        
+        
     }
     
     private void initResources(int x,int y) {
@@ -63,11 +71,14 @@ public class EnemyGD  extends Enemy{
         this.setAnimationFrame(0, 0);
     }
     
-    public void setBoard(Board board) {
-        SpriteGroup EnemyGD = new SpriteGroup("EnemyGD SPRITE GROUPE");
+   public void setBoard(Board board) {
+        SpriteGroup EnemyGD = game.getQuest().getGroup("ENEMYGD SPRITE GROUPE");//game.getQuest().getEnemySG(); 
         EnemyGD.add(this);
-        this.manager.setCollisionGroup(EnemyGD, board.getForeground());
-    }
+        //this.murmanager.setCollisionGroup(EnemyGD, board.getForeground());
+        
+        //SpriteGroup link = game.getLink().getSpriteGroup();
+	    //this.linkManager.setCollisionGroup(EnemyGD, link);
+   }
     
     public void update(long elapsedTime) {
         super.update(elapsedTime);
@@ -81,15 +92,21 @@ public class EnemyGD  extends Enemy{
                
             }
         }
-        if (this.manager != null) 
-            this.manager.checkCollision();
+       if (this.getLife() < 1) {
+    	   this.moveX(1000);
+       }
     }
 
     
     public void render(Graphics2D g) {
         super.render(g);
     }
-
+    
+   
+    
+    public void setOrientation(Orientation orientation) {
+		this.orientation = orientation;
+	}
     
     public void walk(Orientation direction) {
         if (!this.figth.isActive()) { 
@@ -139,12 +156,15 @@ public class EnemyGD  extends Enemy{
         }
     }
     
+    /*
     private class EnemyGDCollisionManager extends AdvanceCollisionGroup {
         public EnemyGDCollisionManager() {
             this.pixelPerfectCollision = false;
         }
         
         public void collided(Sprite s1, Sprite s2) {
+        	
+        	
         	if (this.getCollisionSide() == Orientation.EAST.ordinal() ) {
         		
         		orientation = Orientation.WEST;
@@ -155,7 +175,7 @@ public class EnemyGD  extends Enemy{
             }
         }
     }
-    
+    */
    
     
     public void walkauto() {

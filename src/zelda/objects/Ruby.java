@@ -23,8 +23,8 @@ public class Ruby extends Sprite {
 	
 	private Zelda game;
 	
-	private RubyCollisionManager manager;
-	
+	//private RubyCollisionManager manager;
+	private Kind kind;
 	
 	
 	public enum Kind {
@@ -47,14 +47,19 @@ public class Ruby extends Sprite {
 		this.game = game;
 		this.initResources(kind);
 		this.setActive(true);
-		this.manager = new RubyCollisionManager();		
+		this.kind = kind;
+		//this.manager = new RubyCollisionManager();		
     }
+	
+	public Kind getKind() {
+		return kind;
+	}
 	
 	public void setRuby() {
 		SpriteGroup rubySG = game.getQuest().getRubySG();
         rubySG.add(this);
-        SpriteGroup link = game.getLink().getSpriteGroup();
-        this.manager.setCollisionGroup(rubySG, link);
+        //SpriteGroup link = game.getQuest().getLinkSG();
+        //this.manager.setCollisionGroup(rubySG, link);
     }
 	
 	private void initResources(Kind kind) {
@@ -63,15 +68,13 @@ public class Ruby extends Sprite {
     }
 	
 	public void update() {
-		
-        if (this.manager != null) 
-            this.manager.checkCollision();
     }
 	
 	public void render(Graphics2D g) {
         super.render(g);
     }
 	
+	/*
 	protected class RubyCollisionManager extends BasicCollisionGroup {
 		
 		public boolean colliding = false;
@@ -89,5 +92,6 @@ public class Ruby extends Sprite {
         	s1.setActive(false);
         }
     }
+    */
 
 }

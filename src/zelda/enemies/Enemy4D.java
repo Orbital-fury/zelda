@@ -16,7 +16,7 @@ import com.golden.gamedev.object.collision.AdvanceCollisionGroup;
 
 public class Enemy4D extends Enemy {
 
-	private static final double SPEED = 0.05;
+	private static final double SPEED = 0.01;
 
 	private static final int ANIMATION_DELAY = 250;
 
@@ -29,26 +29,31 @@ public class Enemy4D extends Enemy {
 	private Orientation orientation;
 
 	private int life;
+	
+	private Timer hit;
 
 	private Timer figth;
 
-	private CollisionManager manager;
+	//private CollisionManager murManager;
+	//private CollisionManager linkManager;
 
 	private String numero;
-	
 
 	Timer test = new Timer(500);
 
-	public Enemy4D(Zelda game, String numero, int x, int y) {
+	public Enemy4D(Zelda game, String numero, int x, int y, int life) {
+		super(life);
 		this.game = game;
 		this.orientation = (Orientation) Enemy4D.DEFAULT_ORIENTATION;
 		this.getAnimationTimer().setDelay(Enemy4D.ANIMATION_DELAY);
 		this.figth = new Timer(Enemy4D.FIGHT_TIMER);
 		this.figth.setActive(false);
-		this.manager = new EnemyCollisionManager();
-
+	//	this.murManager = new EnemyCollisionManager();
+	//	this.linkManager = new EnemyCollisionManager();
+		
 		this.numero = numero;
 		this.initResources(x, y);
+		this.setID(2);
 	}
 
 	private void initResources(int x, int y) {
@@ -72,10 +77,14 @@ public class Enemy4D extends Enemy {
 	}
 
 	public void setBoard(Board board) {
-		SpriteGroup Enemy4D = new SpriteGroup("ENEMY4D SPRITE GROUPE");
-		Enemy4D.add(this);
-		this.manager.setCollisionGroup(Enemy4D, board.getForeground());
+		SpriteGroup eSGroup =  game.getQuest().getGroup("ENEMY4D SPRITE GROUPE");
+	    eSGroup.add(this);
+		//this.murManager.setCollisionGroup(eSGroup, board.getForeground());		
+		
+		//SpriteGroup link = game.getLink().getSpriteGroup();
+	   // this.linkManager.setCollisionGroup(eSGroup, link);
 	}
+
 
 	public void update(long elapsedTime) {
 
@@ -96,9 +105,6 @@ public class Enemy4D extends Enemy {
 		
 		if (test.action(elapsedTime)) {
 			
-			System.out.println(test);
-			System.out.println(random);
-			
 			if (random == 1) {
 				orientation = Orientation.SOUTH;
 				this.walkauto();
@@ -115,17 +121,25 @@ public class Enemy4D extends Enemy {
 
 		}
 
-		
-
-		if (this.manager != null)
-			this.manager.checkCollision();
-
+		if (this.getLife() < 1) {
+	    	   this.moveX(1000);
+	    	   this.setActive(false);
+	       }
 	}
+	
+
+
 
 	public void render(Graphics2D g) {
 		super.render(g);
 	}
 
+	
+	 public void setOrientation(Orientation orientation) {
+			this.orientation = orientation;
+		}
+	 
+	 
 	public void walk(Orientation direction) {
 		if (!this.figth.isActive()) {
 			switch (direction) {
@@ -166,51 +180,25 @@ public class Enemy4D extends Enemy {
 		}
 	}
 
-	private class EnemyCollisionManager extends AdvanceCollisionGroup {
+/*	private class EnemyCollisionManager extends AdvanceCollisionGroup {
+	
 		public EnemyCollisionManager() {
 			this.pixelPerfectCollision = false;
 		}
-
+   
+		
+		
+		
 		public void collided(Sprite s1, Sprite s2) {
 			
-			
+			System.out.println(this.getGroup1()); 
+			System.out.println(this.getGroup2()); 
+			this.revertPosition1();	
 
-			if (this.getCollisionSide() == Orientation.EAST.ordinal()) {
-
-				if (orientation != Orientation.NORTH) {
-					orientation = Orientation.NORTH;
-				} else {
-					orientation = Orientation.WEST;
-				}
-			}
-
-			if (this.getCollisionSide() == Orientation.WEST.ordinal()) {
-
-				if (orientation != Orientation.SOUTH) {
-					orientation = Orientation.SOUTH;
-				} else {
-					orientation = Orientation.EAST;
-				}
-			}
-
-			if (this.getCollisionSide() == Orientation.NORTH.ordinal()) {
-				if (orientation != Orientation.WEST) {
-					orientation = Orientation.WEST;
-				} else {
-					orientation = Orientation.SOUTH;
-				}
-			}
-
-			if ((this.getCollisionSide() == Orientation.SOUTH.ordinal()))
-				if (orientation != Orientation.EAST) {
-					orientation = Orientation.EAST;
-				} else {
-					orientation = Orientation.NORTH;
-				}
 		}
 
 	}
-
+*/
 	public void walkauto() {
 
 		if (this.getX() < 0) {
