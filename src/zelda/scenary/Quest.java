@@ -12,6 +12,7 @@ import zelda.Orientation;
 import zelda.Zelda;
 import zelda.enemies.Enemy;
 import zelda.objects.Bow;
+import zelda.objects.CoeurOBJ;
 import zelda.objects.Ruby;
 import zelda.sounds.Sound;
 
@@ -39,6 +40,7 @@ public class Quest extends PlayField {
     private QuestMenu menu;
     
     private SpriteGroup rubySG;
+    private SpriteGroup coeurOBJSG;
     private  SpriteGroup enemySG;
     private  SpriteGroup enemy4D; 
     private  SpriteGroup linkSG;
@@ -59,6 +61,7 @@ public class Quest extends PlayField {
         currentBoard = this.boards[currentBoardX][currentBoardY];
         this.boardSG = new SpriteGroup[5][2];
         this.rubySG = new SpriteGroup("RUBY SPRITE GROUPE");
+        this.coeurOBJSG = new SpriteGroup("COEUR SPRITE GROUPE");
         this.enemySG = new SpriteGroup("ENEMYGD SPRITE GROUPE");
         this.enemy4D = new SpriteGroup("ENEMY4D SPRITE GROUPE");
         this.linkSG = new SpriteGroup("LINK SPRITE GROUPE");
@@ -66,9 +69,11 @@ public class Quest extends PlayField {
         this.addGroup(enemy4D);
         this.addGroup(enemySG);
         this.addGroup(rubySG);
+        this.addGroup(coeurOBJSG);
         this.addGroup(linkSG);
         this.addGroup(bowSG);
         this.addCollisionGroup(rubySG, linkSG, new RubyCollisionManager());
+        this.addCollisionGroup(coeurOBJSG, linkSG, new CoeurCollisionManager());
         this.addCollisionGroup(bowSG, linkSG, new BowCollisionManager());
     }
     
@@ -191,10 +196,11 @@ public class Quest extends PlayField {
         b.setEnemyOnBoard("01", 250, 300, 3);
         b.createRuby(200, 260);
         b.createRuby(450, 400);
+        b.createCoeur(400,400);
         
         
         Board d = boards[4][1];
-        d.createBow(400,400);
+        d.createBow(306,198);
         
         /*
         for (int i = 0; i < boardSG.length ; i++ ) {
@@ -219,7 +225,7 @@ public class Quest extends PlayField {
     	this.addCollisionGroup(enemySG, linkSG, new EnemyLinkCollisionManager());
     	this.addCollisionGroup(enemy4D, linkSG, new EnemyLinkCollisionManager());
         
-        
+    	playSound(Sound.MUSIC);
     }
     
     
@@ -247,6 +253,10 @@ public class Quest extends PlayField {
     
     public SpriteGroup getRubySG() {
     	return rubySG;
+    }
+    
+    public SpriteGroup getCoeurOBJSG() {
+    	return coeurOBJSG;
     }
     
     public SpriteGroup getBowSG() {
@@ -315,12 +325,14 @@ public class Quest extends PlayField {
         this.menu.render(g);
     }
     
-    private void playSound(Sound sound) {
+    public void playSound(Sound sound) {
     	// Charge le fichier son WAV en tant que tableau de bytes
     	String soundFile = sound.getImagePath();
         Path path = Paths.get(soundFile);
         // Initialise le renderer audio et charge le fichier son
+        
         BaseAudioRenderer audioRenderer = new WaveRenderer();
+        game.bsSound.setBaseRenderer(audioRenderer);
         try {
 			audioRenderer.play(path.toUri().toURL());
 		} catch (MalformedURLException e) {
@@ -356,7 +368,31 @@ public class Quest extends PlayField {
         }
     }
     
-protected class BowCollisionManager extends BasicCollisionGroup {
+    protected class CoeurCollisionManager extends BasicCollisionGroup {
+		
+		public CoeurCollisionManager() {
+            this.pixelPerfectCollision = false;
+        }
+        public void collided(Sprite s1, Sprite s2) {
+        	Link link = (Link) s2;
+        	if (s1.isActive()) {
+        		CoeurOBJ coeur = (CoeurOBJ) s1;
+        		if (currentBoard.getCoeurOBJ().contains(s1)) {
+	        		link.setLife(link.getLife() + 1);
+        			menu.setNbrCoeur(link.getLife());
+        			menu.addCoeurDisplay();
+        			
+	        		playSound(Sound.HEART);
+	        		
+	                
+	        		s1.moveX(1000);
+	        		s1.setActive(false);
+        		}
+        	}
+        }
+    }
+    
+    protected class BowCollisionManager extends BasicCollisionGroup {
 		
 		public BowCollisionManager() {
             this.pixelPerfectCollision = false;
@@ -426,6 +462,7 @@ protected class BowCollisionManager extends BasicCollisionGroup {
 					case NORTH:
 						if ((this.getCollisionSide() == 8)) {
 							ennemy.setLife(ennemy.getLife() - 1);
+							game.getQuest().playSound(Sound.HIT);
 							this.revertPosition1();
 							ennemy.getHit().setActive(true);
 						}
@@ -434,6 +471,7 @@ protected class BowCollisionManager extends BasicCollisionGroup {
 						System.out.println(collisionSide);
 						if ((this.getCollisionSide() == 4)) {
 							ennemy.setLife(ennemy.getLife() - 1);
+							game.getQuest().playSound(Sound.HIT);
 							this.revertPosition1();
 							ennemy.getHit().setActive(true);
 						}
@@ -441,6 +479,7 @@ protected class BowCollisionManager extends BasicCollisionGroup {
 					case WEST:
 						if ((this.getCollisionSide() == 2)) {
 							ennemy.setLife(ennemy.getLife() - 1);
+							game.getQuest().playSound(Sound.HIT);
 							this.revertPosition1();
 							ennemy.getHit().setActive(true);
 						}
@@ -448,6 +487,7 @@ protected class BowCollisionManager extends BasicCollisionGroup {
 					case EAST:
 						if ((this.getCollisionSide() == 1)) {
 							ennemy.setLife(ennemy.getLife() - 1);
+							game.getQuest().playSound(Sound.HIT);
 							this.revertPosition1();
 							ennemy.getHit().setActive(true);
 						}

@@ -64,7 +64,7 @@ public class Link extends AnimatedSprite {
         this.murManager = new LinkCollisionManager();
         this.EnemyManager = new EnemyCollisionManager();
         this.Enemy4DManager = new EnemyCollisionManager();
-        life = game.getQuest().getMenu().getNbrCoeur();;
+        life = game.getQuest().getMenu().getNbrCoeur();
         //this.rubyManager = new RubyCollisionManager();
         this.initResources();
     }
@@ -77,6 +77,14 @@ public class Link extends AnimatedSprite {
 	}
 	public Orientation getOrientation() {
 		return this.orientation;
+	}
+	
+	
+	public int getLife() {
+		return life;
+	}
+	public void setLife(int life) {
+		this.life = life;
 	}
     
     private void initResources() {
@@ -187,7 +195,7 @@ public class Link extends AnimatedSprite {
 		if (this.Enemy4DManager != null)
 			this.Enemy4DManager.checkCollision();
 		
-
+		//System.out.println(this.getX() + " ; " + this.getY());
 	}
 
     
@@ -342,7 +350,7 @@ public class Link extends AnimatedSprite {
 					if (!link.figth.isActive()) {
 						life = life - 1;
 						game.getQuest().getMenu().setNbrCoeur(life);
-						game.getQuest().getMenu().coeurDisplay();
+						game.getQuest().getMenu().RemoveCoeurDisplay();
 						this.revertPosition1();
 						link.hit.setActive(true);
 						//this.revertPosition1();
@@ -354,7 +362,7 @@ public class Link extends AnimatedSprite {
 							if (!(this.getCollisionSide() == 4)) {
 								life = life - 1;
 								game.getQuest().getMenu().setNbrCoeur(life);
-								game.getQuest().getMenu().coeurDisplay();
+								game.getQuest().getMenu().RemoveCoeurDisplay();
 								this.revertPosition1();
 								link.hit.setActive(true);
 							}
@@ -363,7 +371,7 @@ public class Link extends AnimatedSprite {
 							if (!(this.getCollisionSide() == 8)) {
 								life = life - 1;
 								game.getQuest().getMenu().setNbrCoeur(life);
-								game.getQuest().getMenu().coeurDisplay();
+								game.getQuest().getMenu().RemoveCoeurDisplay();
 								this.revertPosition1();
 								link.hit.setActive(true);
 							}
@@ -372,7 +380,7 @@ public class Link extends AnimatedSprite {
 							if (!(this.getCollisionSide() == 1)) {
 								life = life - 1;
 								game.getQuest().getMenu().setNbrCoeur(life);
-								game.getQuest().getMenu().coeurDisplay();
+								game.getQuest().getMenu().RemoveCoeurDisplay();
 								this.revertPosition1();
 								link.hit.setActive(true);
 							}
@@ -381,7 +389,7 @@ public class Link extends AnimatedSprite {
 							if (!(this.getCollisionSide() == 2)) {
 								life = life - 1;
 								game.getQuest().getMenu().setNbrCoeur(life);
-								game.getQuest().getMenu().coeurDisplay();
+								game.getQuest().getMenu().RemoveCoeurDisplay();
 								this.revertPosition1();
 								link.hit.setActive(true);
 							}

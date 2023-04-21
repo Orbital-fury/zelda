@@ -11,7 +11,7 @@ import zelda.objects.Ruby.Kind;
 import zelda.scenary.Floor;
 import zelda.scenary.Quest;
 import zelda.scenary.Rock;
-
+import zelda.sounds.Sound;
 
 import com.golden.gamedev.Game;
 import com.golden.gamedev.GameLoader;
@@ -32,6 +32,11 @@ public class Zelda extends Game {
     public static final int HEIGHT = 588;
     public static final int HEIGHT_MENU = 126;
     
+    private static GameOverObject gameOver;
+    private static boolean isGameOver;
+    
+    public static BackgroundMusic music = new BackgroundMusic();
+    
     public Zelda() {
         
     }
@@ -47,7 +52,7 @@ public class Zelda extends Game {
         this.link.setBoard(this.quest.getCurrentBoard());
         this.menu = false;
         this.quest.setEnvironnement();
-        
+        //this.gameOver = new GameOverObject(this);
     }
     
     public static void createMap() {
@@ -138,13 +143,14 @@ public class Zelda extends Game {
     		}
     	}
     }
+    
+    
 
     public void render(Graphics2D g) {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
         this.quest.render(g);
         this.link.render(g);
-        
     }
     
     public Quest getQuest() {
@@ -153,8 +159,16 @@ public class Zelda extends Game {
     
     public static void main(String[] args) {
         GameLoader game = new GameLoader();
-        game.setup(new Zelda(), new Dimension(WIDTH,HEIGHT), false);
+        
+        Zelda zelda = new Zelda();
+		//music.start();
+
+        game.setup(zelda, new Dimension(WIDTH,HEIGHT), false);
+        
         game.start();
+        
+        
+        
     }
     
 }

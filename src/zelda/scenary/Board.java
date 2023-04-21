@@ -10,6 +10,7 @@ import zelda.enemies.Enemy;
 import zelda.enemies.Enemy4D;
 import zelda.enemies.EnemyGD;
 import zelda.objects.Bow;
+import zelda.objects.CoeurOBJ;
 import zelda.objects.ObjectZ;
 import zelda.objects.Ruby;
 import zelda.objects.Ruby.Kind;
@@ -30,6 +31,8 @@ public class Board {
     private ArrayList<Ruby> rubies = new ArrayList<Ruby>();
     
     private ArrayList<ObjectZ> objects = new ArrayList<ObjectZ>();
+    
+    private ArrayList<CoeurOBJ> coeurs = new ArrayList<CoeurOBJ>();
     
     protected AbstractTile[][] tiles;
     
@@ -68,6 +71,10 @@ public class Board {
     
     public ArrayList<ObjectZ> getObjects() {
     	return objects;
+    }
+    
+    public ArrayList<CoeurOBJ> getCoeurOBJ() {
+    	return coeurs;
     }
     
     
@@ -163,6 +170,13 @@ public class Board {
     	bow.setBow();
         bow.setLocation(x, y);
     }
+    
+    public void createCoeur(int x, int y) {
+    	CoeurOBJ coeur = new CoeurOBJ(game);
+    	coeurs.add(coeur);
+    	coeur.setBow();
+    	coeur.setLocation(x, y);
+    }
 
     public void render(Graphics2D g) {
         for (int i = 0; i < Board.WIDTH; i++) {
@@ -180,6 +194,9 @@ public class Board {
         }
         for (ObjectZ object : objects) {
         	object.render(g);
+        }
+        for (CoeurOBJ coeur : coeurs) {
+        	coeur.render(g);
         }
     }
     

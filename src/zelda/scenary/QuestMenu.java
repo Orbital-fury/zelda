@@ -2,7 +2,9 @@ package zelda.scenary;
 
 import java.awt.Graphics2D;
 
+import zelda.GameOverObject;
 import zelda.Zelda;
+import zelda.sounds.Sound;
 
 import com.golden.gamedev.object.Sprite;
 import com.golden.gamedev.object.SpriteGroup;
@@ -84,16 +86,40 @@ public class QuestMenu {
     	this.rubiesGroup.getSprites()[2].setImage(this.game.getImage(afficheNum(centaine)));
     }
     
-    public void coeurDisplay() {
-    	
-    	if (this.nbrCoeur>= 1) {
-    	System.out.println("on change de coeur" );
-    	this.coeur.getSprites()[this.nbrCoeur].setImage(this.game.getImage("res/sprites/Objects/OBH.GIF"));
-    	}
-    	else {
-    		 game.finish();
-    	}
-    }
+	public void RemoveCoeurDisplay() {
+
+		if (this.nbrCoeur >= 1) {
+			System.out.println(this.nbrCoeur);
+			game.getQuest().playSound(Sound.HURT);
+			this.coeur.getSprites()[this.nbrCoeur].setImage(this.game.getImage("res/sprites/Objects/OBH.GIF"));
+		} else {
+			System.out.println(this.nbrCoeur);
+			game.getQuest().playSound(Sound.HURT);
+			this.coeur.getSprites()[this.nbrCoeur].setImage(this.game.getImage("res/sprites/Objects/OBH.GIF"));
+			game.getQuest().playSound(Sound.DIE);
+			game.bsMusic.stopAll();
+			game.bsSound.stopAll();
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			game.finish();
+
+		}
+	}
+	
+	public void addCoeurDisplay() {
+		
+		if (this.nbrCoeur < 6) {
+			System.out.println(this.nbrCoeur);
+			this.coeur.getSprites()[this.nbrCoeur - 1].setImage(this.game.getImage("res/sprites/Objects/OHC.GIF"));
+		} else {
+
+		}
+		
+	}
     
     
     
@@ -102,10 +128,6 @@ public class QuestMenu {
     	if (nbrRuby <= 999) {
     		this.rubyDisplay();
     	}
-    }
-    public void rmCoeur() {
-    		this.coeurDisplay();
-    	
     }
     
     public void update(long elapsedTime) {
